@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TDM Navigator — NTI Platform</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+  :root { color-scheme: dark; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { margin: 0; background: #020617; color: #f1f5f9; }
+  body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  input[type=number] { color-scheme: dark; }
+  @media print { header, footer { display: none; } body { background: #fff; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prop-types@15.8.1/prop-types.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-is@18.3.1/umd/react-is.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/recharts@2.12.7/umd/Recharts.js"></script>
+<script>
+(function () {
+try {
+"use strict";
+const { useState, useMemo } = React;
+const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceArea, ReferenceLine } = Recharts;
+const __mk = (inner) => (props) => React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", className: props.className, dangerouslySetInnerHTML: { __html: inner } });
+const Activity = __mk("<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\"/>");
+const AlertTriangle = __mk("<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/>");
+const ShieldAlert = __mk("<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/><path d=\"M12 8v4\"/><path d=\"M12 16h.01\"/>");
+const CheckCircle2 = __mk("<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m9 12 2 2 4-4\"/>");
+const Stethoscope = __mk("<path d=\"M11 2v2\"/><path d=\"M5 2v2\"/><path d=\"M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1\"/><path d=\"M8 15a6 6 0 0 0 12 0v-3\"/><circle cx=\"20\" cy=\"10\" r=\"2\"/>");
+const User = __mk("<path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/>");
+const Zap = __mk("<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\"/>");
+const TrendingUp = __mk("<polyline points=\"22 7 13.5 15.5 8.5 10.5 2 17\"/><polyline points=\"16 7 22 7 22 13\"/>");
+const Sliders = __mk("<line x1=\"4\" x2=\"4\" y1=\"21\" y2=\"14\"/><line x1=\"4\" x2=\"4\" y1=\"10\" y2=\"3\"/><line x1=\"12\" x2=\"12\" y1=\"21\" y2=\"12\"/><line x1=\"12\" x2=\"12\" y1=\"8\" y2=\"3\"/><line x1=\"20\" x2=\"20\" y1=\"21\" y2=\"16\"/><line x1=\"20\" x2=\"20\" y1=\"12\" y2=\"3\"/><line x1=\"2\" x2=\"6\" y1=\"14\" y2=\"14\"/><line x1=\"10\" x2=\"14\" y1=\"8\" y2=\"8\"/><line x1=\"18\" x2=\"22\" y1=\"16\" y2=\"16\"/>");
+const Printer = __mk("<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\"/><path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\"/><rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\"/>");
+const Pill = __mk("<path d=\"m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z\"/><path d=\"m8.5 8.5 7 7\"/>");
+const AlertCircle = __mk("<circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" x2=\"12\" y1=\"8\" y2=\"12\"/><line x1=\"12\" x2=\"12.01\" y1=\"16\" y2=\"16\"/>");
+const PlusCircle = __mk("<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M8 12h8\"/><path d=\"M12 8v8\"/>");
+const Filter = __mk("<polygon points=\"22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3\"/>");
+const DRUG_CATEGORIES = {
+    glycopeptides: 'Glycopeptides & Antibacterials',
+    antiepileptics: 'Antiepileptics & Neurological',
+    cardiac: 'Cardiac Glycosides & Antiarrhythmics',
+    immunosuppressants: 'Immunosuppressants',
+    mood: 'Mood Stabilizers',
+    oncology: 'Oncology & Antineoplastics',
+    custom: 'Custom / User-Defined NTI Drug',
+};
+// concFactor converts (dose in mg / volume in L) into the drug's reporting
+// concentration unit: mg/L -> 1, ng/mL -> 1000, umol/L (MTX) -> ~2.2,
+// mEq/L (lithium carbonate) -> ~0.0271.
+const INITIAL_DRUG_DATABASE = {
+    // --- 1. GLYCOPEPTIDES & ANTIBACTERIALS ---
+    vancomycin: {
+        name: 'Vancomycin', category: 'glycopeptides', subcategory: 'Glycopeptide Antibiotic',
+        defaultDose: 1000, defaultInterval: 12, defaultInfusionTime: 1, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 15, targetTroughMax: 20, targetPeakMin: 30, targetPeakMax: 40,
+        targetAucMin: 400, targetAucMax: 600, toxicAuc: 600, toxicTrough: 20,
+        pkModel: 'linear-first-order', vdCoeff: 0.7, hasNephroRisk: true,
+        toxicityTypes: ['Nephrotoxicity', 'Ototoxicity', 'Red Man Syndrome'],
+        guideline: '2020 ASHP/IDSA/SIDP AUC-guided dosing guideline (AUC/MIC 400-600 for severe MRSA).',
+    },
+    gentamicin: {
+        name: 'Gentamicin', category: 'glycopeptides', subcategory: 'Aminoglycoside Antibiotic',
+        defaultDose: 350, defaultInterval: 24, defaultInfusionTime: 1, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 0.5, targetTroughMax: 1.0, targetPeakMin: 15, targetPeakMax: 20,
+        targetAucMin: 70, targetAucMax: 120, toxicTrough: 2.0, toxicAuc: 140,
+        pkModel: 'aminoglycoside-extended', vdCoeff: 0.25, hasNephroRisk: true,
+        toxicityTypes: ['Nephrotoxicity', 'Ototoxicity (Vestibular/Cochlear)', 'Neuromuscular Blockade'],
+        guideline: 'Extended-interval aminoglycoside dosing (Hartford Nomogram).',
+    },
+    amikacin: {
+        name: 'Amikacin', category: 'glycopeptides', subcategory: 'Aminoglycoside Antibiotic',
+        defaultDose: 1000, defaultInterval: 24, defaultInfusionTime: 1, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 1.0, targetTroughMax: 5.0, targetPeakMin: 35, targetPeakMax: 50,
+        targetAucMin: 250, targetAucMax: 450, toxicTrough: 10, toxicAuc: 500,
+        pkModel: 'aminoglycoside-extended', vdCoeff: 0.25, hasNephroRisk: true,
+        toxicityTypes: ['Ototoxicity', 'Nephrotoxicity'],
+        guideline: 'High-dose extended-interval monitoring for severe Gram-negative infections.',
+    },
+    tobramycin: {
+        name: 'Tobramycin', category: 'glycopeptides', subcategory: 'Aminoglycoside Antibiotic',
+        defaultDose: 350, defaultInterval: 24, defaultInfusionTime: 1, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 0.5, targetTroughMax: 1.0, targetPeakMin: 12, targetPeakMax: 20,
+        targetAucMin: 70, targetAucMax: 120, toxicTrough: 2.0, toxicAuc: 140,
+        pkModel: 'aminoglycoside-extended', vdCoeff: 0.26, hasNephroRisk: true,
+        toxicityTypes: ['Ototoxicity (Cochlear)', 'Nephrotoxicity'],
+        guideline: 'Target trough <1 mg/L to prevent accumulation in renal cortex and inner ear.',
+    },
+    // --- 2. ANTIEPILEPTICS & NEUROLOGICAL ---
+    phenytoin: {
+        name: 'Phenytoin', category: 'antiepileptics', subcategory: 'Hydantoin Anticonvulsant',
+        defaultDose: 300, defaultInterval: 24, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 10, targetTroughMax: 20, targetPeakMin: 12, targetPeakMax: 20,
+        targetAucMin: 240, targetAucMax: 480, toxicTrough: 20, toxicAuc: 550,
+        pkModel: 'michaelis-menten', vdCoeff: 0.65, hasNephroRisk: false,
+        toxicityTypes: ['Nystagmus & Ataxia', 'Cognitive Impairment', 'Gingival Hyperplasia', 'Arrhythmia (IV)'],
+        guideline: 'Saturable (Michaelis-Menten) kinetics. Adjusted for hypoalbuminemia via Winter-Tozer.',
+    },
+    carbamazepine: {
+        name: 'Carbamazepine', category: 'antiepileptics', subcategory: 'Iminostilbene Anticonvulsant',
+        defaultDose: 400, defaultInterval: 12, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 4, targetTroughMax: 12, targetPeakMin: 6, targetPeakMax: 12,
+        targetAucMin: 100, targetAucMax: 280, toxicTrough: 12, toxicAuc: 320,
+        pkModel: 'linear-first-order', vdCoeff: 1.4, hasNephroRisk: false,
+        toxicityTypes: ['Diplopia & Dizziness', 'Hyponatremia / SIADH', 'Aplastic Anemia / Agranulocytosis', 'Hepatotoxicity'],
+        guideline: 'Undergoes autoinduction of CYP3A4 over first 3-5 weeks of therapy.',
+    },
+    valproate: {
+        name: 'Valproic Acid', category: 'antiepileptics', subcategory: 'Fatty Acid Derivative Anticonvulsant',
+        defaultDose: 500, defaultInterval: 12, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 50, targetTroughMax: 100, targetPeakMin: 60, targetPeakMax: 110,
+        targetAucMin: 1200, targetAucMax: 2400, toxicTrough: 125, toxicAuc: 3000,
+        pkModel: 'linear-first-order', vdCoeff: 0.15, hasNephroRisk: false,
+        toxicityTypes: ['Hepatotoxicity & Pancreatitis', 'Hyperammonemic Encephalopathy', 'Thrombocytopenia', 'Sedation'],
+        guideline: 'Therapeutic window 50 - 100 mg/L (Up to 125 mg/L in severe acute mania).',
+    },
+    phenobarbital: {
+        name: 'Phenobarbital', category: 'antiepileptics', subcategory: 'Barbiturate Anticonvulsant',
+        defaultDose: 100, defaultInterval: 24, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 15, targetTroughMax: 40, targetPeakMin: 20, targetPeakMax: 40,
+        targetAucMin: 360, targetAucMax: 960, toxicTrough: 45, toxicAuc: 1100,
+        pkModel: 'linear-first-order', vdCoeff: 0.7, hasNephroRisk: false,
+        toxicityTypes: ['Severe Sedation & Respiratory Depression', 'Ataxia', 'Cognitive Slowing', 'Physical Dependence'],
+        guideline: 'Long elimination half-life (50-120 hrs). Troughs stable throughout dosing interval.',
+    },
+    ethosuximide: {
+        name: 'Ethosuximide', category: 'antiepileptics', subcategory: 'Succinimide Anticonvulsant',
+        defaultDose: 500, defaultInterval: 24, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 40, targetTroughMax: 100, targetPeakMin: 50, targetPeakMax: 100,
+        targetAucMin: 960, targetAucMax: 2400, toxicTrough: 115, toxicAuc: 2800,
+        pkModel: 'linear-first-order', vdCoeff: 0.7, hasNephroRisk: false,
+        toxicityTypes: ['GI Distress', 'Drowsiness & Headache', 'Blood Dyscrasias', 'Stevens-Johnson Syndrome'],
+        guideline: 'First-line for absence seizures. Broad therapeutic window (40-100 mg/L).',
+    },
+    // --- 3. CARDIAC GLYCOSIDES & ANTIARRHYTHMICS ---
+    digoxin: {
+        name: 'Digoxin', category: 'cardiac', subcategory: 'Cardiac Glycoside',
+        defaultDose: 0.125, defaultInterval: 24, defaultInfusionTime: 0, unit: 'mg', concUnit: 'ng/mL',
+        concFactor: 1000,
+        targetTroughMin: 0.5, targetTroughMax: 0.9, targetPeakMin: 1.0, targetPeakMax: 2.0,
+        targetAucMin: 12, targetAucMax: 24, toxicTrough: 2.0, toxicAuc: 48,
+        pkModel: 'digoxin-pop', vdCoeff: 6.7, hasNephroRisk: false,
+        toxicityTypes: ['Ventricular Arrhythmias / AV Block', 'Visual Disturbances (Yellow/Green Halos)', 'Severe Nausea / Vomiting', 'Hyperkalemia'],
+        guideline: 'Target 0.5-0.9 ng/mL for Heart Failure; up to 1.2-2.0 ng/mL for Atrial Fibrillation.',
+    },
+    theophylline: {
+        name: 'Theophylline', category: 'cardiac', subcategory: 'Xanthine Bronchodilator',
+        defaultDose: 300, defaultInterval: 12, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 5, targetTroughMax: 15, targetPeakMin: 8, targetPeakMax: 15,
+        targetAucMin: 120, targetAucMax: 360, toxicTrough: 20, toxicAuc: 480,
+        pkModel: 'linear-first-order', vdCoeff: 0.5, hasNephroRisk: false,
+        toxicityTypes: ['Fatal Tachyarrhythmias', 'Refractory Seizures', 'Intractable Vomiting', 'Hypokalemia'],
+        guideline: 'Narrow range (5-15 mg/L). Highly sensitive to CYP1A2 inhibitors (Ciprofloxacin, Fluvoxamine).',
+    },
+    quinidine: {
+        name: 'Quinidine', category: 'cardiac', subcategory: 'Class Ia Antiarrhythmic',
+        defaultDose: 200, defaultInterval: 8, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 2.0, targetTroughMax: 5.0, targetPeakMin: 3.0, targetPeakMax: 5.0,
+        targetAucMin: 48, targetAucMax: 120, toxicTrough: 6.0, toxicAuc: 150,
+        pkModel: 'linear-first-order', vdCoeff: 2.5, hasNephroRisk: false,
+        toxicityTypes: ['Torsades de Pointes / QTc Prolongation', 'Cinchonism (Tinnitus/Headache)', 'Thrombocytopenia'],
+        guideline: 'Requires continuous ECG monitoring for QTc interval prolongation.',
+    },
+    lidocaine: {
+        name: 'Lidocaine', category: 'cardiac', subcategory: 'Class Ib Antiarrhythmic',
+        defaultDose: 100, defaultInterval: 1, defaultInfusionTime: 1, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 1.5, targetTroughMax: 5.0, targetPeakMin: 2.0, targetPeakMax: 5.0,
+        targetAucMin: 36, targetAucMax: 120, toxicTrough: 6.0, toxicAuc: 144,
+        pkModel: 'linear-first-order', vdCoeff: 1.1, hasNephroRisk: false,
+        toxicityTypes: ['CNS Toxicity (Paresthesias, Seizures)', 'Slurred Speech', 'Bradycardia & Hypotension'],
+        guideline: 'High hepatic extraction ratio. Clearance declines in heart failure or cirrhosis.',
+    },
+    procainamide: {
+        name: 'Procainamide', category: 'cardiac', subcategory: 'Class Ia Antiarrhythmic',
+        defaultDose: 500, defaultInterval: 6, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 4, targetTroughMax: 10, targetPeakMin: 6, targetPeakMax: 10,
+        targetAucMin: 96, targetAucMax: 240, toxicTrough: 12, toxicAuc: 288,
+        pkModel: 'linear-first-order', vdCoeff: 2.0, hasNephroRisk: false,
+        toxicityTypes: ['Drug-Induced Lupus Erythematosus', 'QTc Prolongation', 'Agranulocytosis', 'Hypotension'],
+        guideline: 'Active metabolite NAPA (N-acetylprocainamide) must also be monitored in renal dysfunction.',
+    },
+    // --- 4. IMMUNOSUPPRESSANTS ---
+    tacrolimus: {
+        name: 'Tacrolimus', category: 'immunosuppressants', subcategory: 'Calcineurin Inhibitor',
+        defaultDose: 2, defaultInterval: 12, defaultInfusionTime: 0, unit: 'mg', concUnit: 'ng/mL',
+        concFactor: 1000,
+        targetTroughMin: 5, targetTroughMax: 12, targetPeakMin: 12, targetPeakMax: 25,
+        targetAucMin: 150, targetAucMax: 300, toxicTrough: 15, toxicAuc: 350,
+        pkModel: 'linear-first-order', vdCoeff: 1.0, hasNephroRisk: true,
+        toxicityTypes: ['Acute/Chronic Nephrotoxicity', 'Post-Transplant Diabetes Mellitus', 'Neurotoxicity (Tremor)', 'Hypertension'],
+        guideline: 'Target 12-hour whole blood trough levels vary based on post-transplant time window.',
+    },
+    cyclosporine: {
+        name: 'Cyclosporine', category: 'immunosuppressants', subcategory: 'Calcineurin Inhibitor',
+        defaultDose: 150, defaultInterval: 12, defaultInfusionTime: 0, unit: 'mg', concUnit: 'ng/mL',
+        concFactor: 1000,
+        targetTroughMin: 100, targetTroughMax: 250, targetPeakMin: 800, targetPeakMax: 1200,
+        targetAucMin: 2000, targetAucMax: 4500, toxicTrough: 350, toxicAuc: 5000,
+        pkModel: 'linear-first-order', vdCoeff: 4.5, hasNephroRisk: true,
+        toxicityTypes: ['Renal Vasoconstriction / Nephrotoxicity', 'Severe Hypertension', 'Gingival Hyperplasia', 'Hirsutism'],
+        guideline: 'Monitored via C0 (trough) or C2 (2-hour post-dose peak level).',
+    },
+    sirolimus: {
+        name: 'Sirolimus (Rapamycin)', category: 'immunosuppressants', subcategory: 'mTOR Inhibitor',
+        defaultDose: 2, defaultInterval: 24, defaultInfusionTime: 0, unit: 'mg', concUnit: 'ng/mL',
+        concFactor: 1000,
+        targetTroughMin: 5, targetTroughMax: 15, targetPeakMin: 10, targetPeakMax: 25,
+        targetAucMin: 120, targetAucMax: 360, toxicTrough: 20, toxicAuc: 450,
+        pkModel: 'linear-first-order', vdCoeff: 12.0, hasNephroRisk: false,
+        toxicityTypes: ['Hyperlipidemia / Hypertriglyceridemia', 'Thrombocytopenia', 'Impaired Wound Healing', 'Pneumonitis'],
+        guideline: 'Long elimination half-life (~60 hours). Steady state reached after 7-14 days.',
+    },
+    everolimus: {
+        name: 'Everolimus', category: 'immunosuppressants', subcategory: 'mTOR Inhibitor',
+        defaultDose: 0.75, defaultInterval: 12, defaultInfusionTime: 0, unit: 'mg', concUnit: 'ng/mL',
+        concFactor: 1000,
+        targetTroughMin: 3, targetTroughMax: 8, targetPeakMin: 8, targetPeakMax: 15,
+        targetAucMin: 72, targetAucMax: 192, toxicTrough: 12, toxicAuc: 250,
+        pkModel: 'linear-first-order', vdCoeff: 1.5, hasNephroRisk: false,
+        toxicityTypes: ['Hypercholesterolemia', 'Aphthous Stomatitis', 'Proteinuria', 'Peripheral Edema'],
+        guideline: 'Narrow range (3-8 ng/mL) when co-administered with reduced-dose calcineurin inhibitors.',
+    },
+    mycophenolic_acid: {
+        name: 'Mycophenolic Acid (MPA)', category: 'immunosuppressants', subcategory: 'IMPDH Inhibitor',
+        defaultDose: 720, defaultInterval: 12, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 1.0, targetTroughMax: 3.5, targetPeakMin: 10, targetPeakMax: 25,
+        targetAucMin: 30, targetAucMax: 60, toxicTrough: 5.0, toxicAuc: 75,
+        pkModel: 'linear-first-order', vdCoeff: 3.6, hasNephroRisk: false,
+        toxicityTypes: ['Severe Diarrhea & GI Distress', 'Leukopenia / Neutropenia', 'CMV Infection Reactivation'],
+        guideline: 'AUC0-12 target range 30-60 mg·h/L for optimal organ rejection prophylaxis.',
+    },
+    // --- 5. MOOD STABILIZERS ---
+    lithium: {
+        name: 'Lithium', category: 'mood', subcategory: 'Monovalent Cation Mood Stabilizer',
+        defaultDose: 600, defaultInterval: 12, defaultInfusionTime: 0, unit: 'mg', concUnit: 'mEq/L',
+        concFactor: 0.0271,
+        targetTroughMin: 0.6, targetTroughMax: 1.0, targetPeakMin: 1.0, targetPeakMax: 1.5,
+        targetAucMin: 14, targetAucMax: 24, toxicTrough: 1.5, toxicAuc: 36,
+        pkModel: 'lithium-pop', vdCoeff: 0.8, hasNephroRisk: true,
+        toxicityTypes: ['Coarse Tremor & Ataxia', 'Nephrogenic Diabetes Insipidus', 'Hypothyroidism', 'Renal Impairment'],
+        guideline: 'Standard 12-hour post-dose trough target 0.6-1.0 mEq/L (0.8-1.2 mEq/L in acute mania).',
+    },
+    // --- 6. ONCOLOGY & ANTINEOPLASTICS ---
+    methotrexate: {
+        name: 'Methotrexate (High-Dose)', category: 'oncology', subcategory: 'Folate Antimetabolite',
+        defaultDose: 3500, defaultInterval: 24, defaultInfusionTime: 4, unit: 'mg', concUnit: 'µmol/L',
+        concFactor: 2.2,
+        targetTroughMin: 0.1, targetTroughMax: 1.0, targetPeakMin: 50, targetPeakMax: 1000,
+        targetAucMin: 500, targetAucMax: 2500, toxicTrough: 5.0, toxicAuc: 3000,
+        pkModel: 'linear-first-order', vdCoeff: 0.5, hasNephroRisk: true,
+        toxicityTypes: ['Acute Tubular Necrosis / Renal Failure', 'Severe Bone Marrow Suppression', 'Mucositis / Stomatitis', 'Hepatotoxicity'],
+        guideline: 'HDMTX monitoring dictates Leucovorin rescue duration and Glucarpidase intervention.',
+    },
+    // --- 7. CUSTOM USER-DEFINED NTI DRUG ---
+    custom_nti: {
+        name: 'Custom NTI Agent', category: 'custom', subcategory: 'User-Defined Pharmacokinetic Profile',
+        defaultDose: 100, defaultInterval: 12, defaultInfusionTime: 1, unit: 'mg', concUnit: 'mg/L',
+        targetTroughMin: 5, targetTroughMax: 15, targetPeakMin: 20, targetPeakMax: 40,
+        targetAucMin: 100, targetAucMax: 300, toxicTrough: 20, toxicAuc: 400,
+        pkModel: 'linear-first-order', vdCoeff: 0.6, hasNephroRisk: false,
+        toxicityTypes: ['Custom Organ Toxicity Risk', 'Organ Accumulation'],
+        guideline: 'Custom user-specified narrow therapeutic window parameters.',
+    },
+};
+// Steady-state concentration at time t (h after the start of a dose) for an
+// intermittent infusion. f converts (dose unit / L) into the reporting unit.
+const ssConc = (D, ke, vd, tInf, tau, t, f = 1) => {
+    const k = Math.max(ke, 1e-6);
+    const R = (f * D) / tInf;
+    const peak = (R / (k * vd)) * (1 - Math.exp(-k * tInf)) / (1 - Math.exp(-k * tau));
+    const trough = peak * Math.exp(-k * (tau - tInf));
+    const tc = ((t % tau) + tau) % tau;
+    return tc <= tInf
+        ? trough * Math.exp(-k * tc) + (R / (k * vd)) * (1 - Math.exp(-k * tc))
+        : peak * Math.exp(-k * (tc - tInf));
+};
+const ssPeakTrough = (D, ke, vd, tInf, tau, f = 1) => {
+    const k = Math.max(ke, 1e-6);
+    const peak = ((f * D) / (tInf * k * vd)) * (1 - Math.exp(-k * tInf)) / (1 - Math.exp(-k * tau));
+    return { peak, trough: peak * Math.exp(-k * (tau - tInf)) };
+};
+const r1 = (n) => Math.round(n * 10) / 10;
+const r2 = (n) => Math.round(n * 100) / 100;
+function TDMNavigatorApp() {
+    var _a;
+    // --- STATE ---
+    const [drugDatabase, setDrugDatabase] = useState(INITIAL_DRUG_DATABASE);
+    const [selectedDrugKey, setSelectedDrugKey] = useState('vancomycin');
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [patient, setPatient] = useState({
+        id: 'PT-89421',
+        name: 'Eleanor Vance',
+        age: 64,
+        gender: 'female',
+        weight: 70,
+        height: 165,
+        scr: 1.3,
+        albumin: 3.8,
+    });
+    const [regimen, setRegimen] = useState({
+        dose: 1000,
+        interval: 12,
+        infusionTime: 1,
+        cMeasured: 18.5,
+        samplingTime: 11,
+    });
+    const [selectedSimIndex, setSelectedSimIndex] = useState(1);
+    const [customDose, setCustomDose] = useState(1250);
+    const [customInterval, setCustomInterval] = useState(12);
+    const [showCustomModal, setShowCustomModal] = useState(false);
+    const [customDrugForm, setCustomDrugForm] = useState({
+        name: 'Investigational NTI Drug X',
+        subcategory: 'Novel Therapeutic Agent',
+        unit: 'mg',
+        concUnit: 'mg/L',
+        defaultDose: 100,
+        defaultInterval: 12,
+        defaultInfusionTime: 1,
+        targetTroughMin: 5,
+        targetTroughMax: 15,
+        targetPeakMin: 20,
+        targetPeakMax: 35,
+        targetAucMin: 120,
+        targetAucMax: 280,
+        toxicTrough: 20,
+        toxicAuc: 350,
+        vdCoeff: 0.6,
+        hasNephroRisk: true,
+        toxicityTypes: 'Nephrotoxicity, Neurotoxicity, Hepatotoxicity',
+    });
+    const [showPrintReport, setShowPrintReport] = useState(false);
+    const activeDrug = drugDatabase[selectedDrugKey] || drugDatabase.vancomycin;
+    const filteredDrugKeys = useMemo(() => Object.keys(drugDatabase).filter((key) => selectedCategory === 'all' || drugDatabase[key].category === selectedCategory), [drugDatabase, selectedCategory]);
+    // --- ANTHROPOMETRIC & RENAL CALCULATIONS ---
+    const patientCalculations = useMemo(() => {
+        const heightInches = patient.height / 2.54;
+        let ibw = patient.gender === 'female'
+            ? 45.5 + 2.3 * (heightInches - 60)
+            : 50 + 2.3 * (heightInches - 60);
+        ibw = Math.max(35, r1(ibw));
+        const abw = r1(ibw + 0.4 * (patient.weight - ibw));
+        const weightForCrCl = patient.weight > 1.2 * ibw ? abw : patient.weight;
+        let crCl = ((140 - patient.age) * weightForCrCl) / (72 * Math.max(0.2, patient.scr));
+        if (patient.gender === 'female')
+            crCl *= 0.85;
+        crCl = r1(crCl);
+        const bsa = Math.sqrt((patient.height * patient.weight) / 3600);
+        // Winter-Tozer corrected phenytoin level (albumin < 4.4 g/dL)
+        let correctedPhenytoin = regimen.cMeasured;
+        if (selectedDrugKey === 'phenytoin' && patient.albumin < 4.4 && patient.albumin > 0) {
+            correctedPhenytoin = r1(regimen.cMeasured / (0.2 * patient.albumin + 0.1));
+        }
+        return { ibw, abw, weightForCrCl, crCl, bsa: r2(bsa), correctedPhenytoin };
+    }, [patient, regimen.cMeasured, selectedDrugKey]);
+    // --- PK ENGINE ---
+    const pkResults = useMemo(() => {
+        var _a;
+        const wt = patient.weight;
+        const crCl = patientCalculations.crCl;
+        const model = activeDrug.pkModel;
+        // 1. Volume of distribution (L)
+        let vd = activeDrug.vdCoeff * wt;
+        if (model === 'aminoglycoside-extended') {
+            vd = activeDrug.vdCoeff * patientCalculations.weightForCrCl;
+        }
+        else if (selectedDrugKey === 'digoxin') {
+            vd = 3.8 * wt + 3.1 * crCl;
+            vd = Math.max(200, Math.min(800, vd));
+        }
+        else if (selectedDrugKey === 'lithium') {
+            vd = 0.8 * patientCalculations.ibw;
+        }
+        // 2. Clearance (L/h) and elimination rate constant (1/h)
+        let ke = 0;
+        let cl = 0;
+        if (selectedDrugKey === 'vancomycin') {
+            cl = 0.06 * crCl + 0.005 * wt;
+            ke = cl / vd;
+        }
+        else if (model === 'aminoglycoside-extended') {
+            ke = 0.00293 * crCl + 0.014;
+            cl = ke * vd;
+        }
+        else if (selectedDrugKey === 'digoxin') {
+            cl = (0.8 * crCl + 12) * 0.06; // mL/min -> L/h
+            ke = cl / vd;
+        }
+        else if (selectedDrugKey === 'lithium') {
+            cl = (0.2 * crCl + 5) * 0.06; // mL/min -> L/h
+            ke = cl / vd;
+        }
+        else if (model === 'michaelis-menten') {
+            const vmax = 7.0 * wt; // mg/day
+            const km = 4.0; // mg/L
+            const dailyDose = (regimen.dose / Math.max(0.5, regimen.interval)) * 24;
+            const css = (km * dailyDose) / Math.max(1, vmax - dailyDose);
+            cl = dailyDose / (Math.max(css, 1e-6) * 24);
+            ke = cl / vd;
+        }
+        else {
+            // Generic placeholder model scaled to renal function
+            cl = (crCl / 100) * (vd * 0.04) + 0.15;
+            ke = cl / vd;
+        }
+        // 3. Fit ke to the measured level
+        const effectiveMeasured = selectedDrugKey === 'phenytoin' && patientCalculations.correctedPhenytoin > 0
+            ? patientCalculations.correctedPhenytoin
+            : regimen.cMeasured;
+        const f = (_a = activeDrug.concFactor) !== null && _a !== void 0 ? _a : 1;
+        const tInf = Math.max(0.1, regimen.infusionTime || 0.1);
+        const D = regimen.dose;
+        const tau = Math.max(tInf, regimen.interval || 12);
+        const tSamp = ((regimen.samplingTime % tau) + tau) % tau;
+        let adjustedKe = ke;
+        if (effectiveMeasured > 0 && regimen.samplingTime > 0) {
+            const g = (k) => ssConc(D, k, vd, tInf, tau, tSamp, f);
+            let lo = 0.001;
+            let hi = 0.8;
+            if (g(lo) >= effectiveMeasured && g(hi) <= effectiveMeasured) {
+                for (let i = 0; i < 50; i++) {
+                    const mid = (lo + hi) / 2;
+                    if (g(mid) > effectiveMeasured)
+                        lo = mid;
+                    else
+                        hi = mid;
+                }
+                adjustedKe = (lo + hi) / 2;
+            }
+        }
+        const tHalf = Math.log(2) / adjustedKe;
+        const finalCl = adjustedKe * vd;
+        const { peak: ssPeak, trough: ssTrough } = ssPeakTrough(D, adjustedKe, vd, tInf, tau, f);
+        const auc24 = ((f * D) / finalCl) * (24 / tau);
+        return {
+            vd: r1(vd),
+            cl: r2(finalCl),
+            ke: Math.round(adjustedKe * 10000) / 10000,
+            tHalf: r1(tHalf),
+            auc24: r1(auc24),
+            ssPeak: r2(ssPeak),
+            ssTrough: r2(ssTrough),
+        };
+    }, [patient, patientCalculations, activeDrug, regimen, selectedDrugKey]);
+    // --- DOSE ADJUSTMENT SIMULATOR ---
+    const simulatedRegimens = useMemo(() => {
+        var _a;
+        const { ke, vd, cl } = pkResults;
+        const f = (_a = activeDrug.concFactor) !== null && _a !== void 0 ? _a : 1;
+        const tInf = Math.max(0.1, regimen.infusionTime || 0.1);
+        const calculateForOption = (dose, interval) => {
+            const tau = Math.max(tInf, interval || 12);
+            const { peak, trough } = ssPeakTrough(dose, ke, vd, tInf, tau, f);
+            const auc24 = ((f * dose) / cl) * (24 / tau);
+            let status = 'Therapeutic';
+            let statusClass = 'text-emerald-400 bg-emerald-950/60 border-emerald-700/60';
+            if (trough < activeDrug.targetTroughMin || auc24 < activeDrug.targetAucMin) {
+                status = 'Subtherapeutic';
+                statusClass = 'text-amber-400 bg-amber-950/60 border-amber-700/60';
+            }
+            else if (auc24 > activeDrug.toxicAuc || trough > activeDrug.toxicTrough) {
+                status = 'High Toxicity Risk';
+                statusClass = 'text-rose-400 bg-rose-950/60 border-rose-700/60';
+            }
+            else if (trough > activeDrug.targetTroughMax || auc24 > activeDrug.targetAucMax) {
+                status = 'Above Target Range';
+                statusClass = 'text-orange-400 bg-orange-950/60 border-orange-700/60';
+            }
+            return {
+                dose,
+                interval,
+                trough: r2(trough),
+                peak: r2(peak),
+                auc24: r1(auc24),
+                status,
+                statusClass,
+            };
+        };
+        const opt1Dose = Math.max(0.01, Math.round(regimen.dose * 0.8 * 1000) / 1000); // 20% reduction
+        return [
+            { id: 0, label: 'Option A (De-escalated)', ...calculateForOption(opt1Dose, regimen.interval) },
+            { id: 1, label: 'Option B (Current)', ...calculateForOption(regimen.dose, regimen.interval) },
+            { id: 2, label: 'Option C (Simulated Target)', ...calculateForOption(customDose, customInterval) },
+        ];
+    }, [regimen, pkResults, activeDrug, customDose, customInterval]);
+    // --- CONCENTRATION-TIME GRAPH ---
+    const chartData = useMemo(() => {
+        var _a;
+        const { ke, vd } = pkResults;
+        const f = (_a = activeDrug.concFactor) !== null && _a !== void 0 ? _a : 1;
+        const tInf = Math.max(0.1, regimen.infusionTime || 0.1);
+        const tauCur = Math.max(tInf, regimen.interval || 12);
+        const activeSim = simulatedRegimens[selectedSimIndex] || simulatedRegimens[1];
+        const tauSim = Math.max(tInf, activeSim.interval || 12);
+        const maxHours = Math.max(48, tauCur * 2);
+        const sampleT = Math.round((((regimen.samplingTime % tauCur) + tauCur) % tauCur) * 2) / 2;
+        const measured = selectedDrugKey === 'phenytoin' && patientCalculations.correctedPhenytoin > 0
+            ? patientCalculations.correctedPhenytoin
+            : regimen.cMeasured;
+        const data = [];
+        for (let t = 0; t <= maxHours; t += 0.5) {
+            const point = {
+                time: t,
+                cCurrent: r2(ssConc(regimen.dose, ke, vd, tInf, tauCur, t, f)),
+                cSimulated: r2(ssConc(activeSim.dose, ke, vd, tInf, tauSim, t, f)),
+            };
+            // Show the measured level once per cycle, at its position in the interval
+            if (regimen.cMeasured > 0 && Math.abs((t % tauCur) - sampleT) < 0.01) {
+                point.cMeasured = measured;
+            }
+            data.push(point);
+        }
+        return data;
+    }, [regimen, pkResults, simulatedRegimens, selectedSimIndex, selectedDrugKey, patientCalculations, activeDrug]);
+    // --- TOXICITY RISK ANALYSIS ---
+    const riskAnalysis = useMemo(() => {
+        const auc = pkResults.auc24;
+        const trough = pkResults.ssTrough;
+        const scr = patient.scr;
+        const toxList = activeDrug.toxicityTypes || [];
+        let level = 'LOW';
+        let title = 'Low Toxicity Risk — Target Achieved';
+        const points = [];
+        if (auc > activeDrug.toxicAuc || trough > activeDrug.toxicTrough || (activeDrug.hasNephroRisk && scr >= 2.0)) {
+            level = 'HIGH';
+            title = 'HIGH TOXICITY & CLINICAL RISK WARNING';
+            if (trough > activeDrug.toxicTrough) {
+                points.push(`Predicted trough concentration (${trough} ${activeDrug.concUnit}) exceeds toxic threshold (${activeDrug.toxicTrough} ${activeDrug.concUnit}).`);
+            }
+            if (auc > activeDrug.toxicAuc) {
+                points.push(`24-hour AUC exposure (${auc} ${activeDrug.concUnit}·h) exceeds upper safety threshold (${activeDrug.toxicAuc}).`);
+            }
+            if (activeDrug.hasNephroRisk && scr >= 2.0) {
+                points.push(`Severe renal dysfunction (SCr ${scr} mg/dL, CrCl ${patientCalculations.crCl} mL/min) markedly reduces drug clearance.`);
+            }
+            points.push(`Associated organ toxicities: ${toxList.join(', ')}.`);
+            points.push('Consider holding the dose or decreasing the total daily dose; re-check the level in 24h. Verify against institutional protocol.');
+        }
+        else if (trough > activeDrug.targetTroughMax || auc > activeDrug.targetAucMax) {
+            level = 'MODERATE';
+            title = 'Moderate Accumulation Risk — Above Target';
+            points.push(`Predicted level (${trough} ${activeDrug.concUnit}) exceeds upper therapeutic range (${activeDrug.targetTroughMax} ${activeDrug.concUnit}).`);
+            points.push(`Potential adverse effects to monitor: ${toxList.slice(0, 2).join(', ')}.`);
+            points.push('Consider a minor dose reduction or interval extension.');
+        }
+        else if (trough < activeDrug.targetTroughMin || auc < activeDrug.targetAucMin) {
+            level = 'SUBTHERAPEUTIC';
+            title = 'Subtherapeutic Risk — Efficacy Failure Warning';
+            points.push(`Predicted exposure (Trough: ${trough} ${activeDrug.concUnit}) is below minimum target (${activeDrug.targetTroughMin} ${activeDrug.concUnit}).`);
+            points.push('Risk of treatment failure or emergence of therapeutic resistance.');
+            points.push('Consider dose escalation or interval shortening.');
+        }
+        else {
+            points.push(`Current steady-state exposure (Trough: ${trough} ${activeDrug.concUnit}, AUC24: ${auc}) is within target bounds.`);
+            points.push(`Organ risk factors (${toxList.slice(0, 2).join(', ')}) should continue to be monitored.`);
+        }
+        return { level, title, points };
+    }, [pkResults, patient, activeDrug, patientCalculations]);
+    // --- CUSTOM DRUG HANDLER ---
+    const handleCreateCustomDrug = (e) => {
+        e.preventDefault();
+        const customKey = `custom_${Date.now()}`;
+        const newDrug = {
+            name: customDrugForm.name,
+            category: 'custom',
+            subcategory: customDrugForm.subcategory,
+            defaultDose: Number(customDrugForm.defaultDose),
+            defaultInterval: Number(customDrugForm.defaultInterval),
+            defaultInfusionTime: Number(customDrugForm.defaultInfusionTime),
+            unit: customDrugForm.unit,
+            concUnit: customDrugForm.concUnit,
+            targetTroughMin: Number(customDrugForm.targetTroughMin),
+            targetTroughMax: Number(customDrugForm.targetTroughMax),
+            targetPeakMin: Number(customDrugForm.targetPeakMin),
+            targetPeakMax: Number(customDrugForm.targetPeakMax),
+            targetAucMin: Number(customDrugForm.targetAucMin),
+            targetAucMax: Number(customDrugForm.targetAucMax),
+            toxicTrough: Number(customDrugForm.toxicTrough),
+            toxicAuc: Number(customDrugForm.toxicAuc),
+            pkModel: 'linear-first-order',
+            vdCoeff: Number(customDrugForm.vdCoeff),
+            hasNephroRisk: customDrugForm.hasNephroRisk,
+            toxicityTypes: customDrugForm.toxicityTypes.split(',').map((s) => s.trim()).filter(Boolean),
+            guideline: 'User-Defined Custom NTI Drug Profile',
+        };
+        setDrugDatabase((prev) => ({ ...prev, [customKey]: newDrug }));
+        setSelectedDrugKey(customKey);
+        setRegimen({
+            dose: newDrug.defaultDose,
+            interval: newDrug.defaultInterval,
+            infusionTime: newDrug.defaultInfusionTime,
+            cMeasured: 0,
+            samplingTime: Math.max(0.5, newDrug.defaultInterval - 1),
+        });
+        setCustomDose(newDrug.defaultDose);
+        setCustomInterval(newDrug.defaultInterval);
+        setShowCustomModal(false);
+    };
+    const cf = (field) => (e) => setCustomDrugForm({ ...customDrugForm, [field]: e.target.value });
+    const inputBase = 'w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:border-teal-500 focus:outline-none';
+    return (React.createElement("div", { className: "min-h-screen bg-slate-950 text-slate-100 font-sans antialiased selection:bg-teal-500 selection:text-white" },
+        React.createElement("header", { className: "sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3 flex items-center justify-between" },
+            React.createElement("div", { className: "flex items-center space-x-3" },
+                React.createElement("div", { className: "bg-gradient-to-tr from-teal-500 to-cyan-500 p-2.5 rounded-xl shadow-lg shadow-teal-500/20" },
+                    React.createElement(Stethoscope, { className: "w-6 h-6 text-slate-950" })),
+                React.createElement("div", null,
+                    React.createElement("h1", { className: "text-xl font-bold tracking-tight text-white" },
+                        "TDM Navigator",
+                        React.createElement("span", { className: "text-teal-400 font-normal text-xs ml-1 px-1.5 py-0.5 rounded bg-teal-950 border border-teal-800" }, "NTI Platform v3.0")),
+                    React.createElement("p", { className: "text-xs text-slate-400 hidden sm:block" }, "Comprehensive Multi-Drug Narrow Therapeutic Index CDST"))),
+            React.createElement("div", { className: "flex items-center space-x-3" },
+                React.createElement("button", { onClick: () => setShowCustomModal(true), className: "hidden sm:flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-teal-300 text-xs font-semibold px-3 py-2 rounded-xl transition" },
+                    React.createElement(PlusCircle, { className: "w-4 h-4 text-teal-400" }),
+                    React.createElement("span", null, "Add Custom NTI")),
+                React.createElement("button", { onClick: () => setShowPrintReport(!showPrintReport), className: "flex items-center space-x-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-md shadow-teal-900/30" },
+                    React.createElement(Printer, { className: "w-4 h-4" }),
+                    React.createElement("span", { className: "hidden sm:inline" }, showPrintReport ? 'Interactive View' : 'Print Report')))),
+        showCustomModal && (React.createElement("div", { className: "fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" },
+            React.createElement("div", { className: "bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl" },
+                React.createElement("div", { className: "flex justify-between items-center border-b border-slate-800 pb-3" },
+                    React.createElement("h3", { className: "text-base font-bold text-white flex items-center" },
+                        React.createElement(PlusCircle, { className: "w-5 h-5 text-teal-400 mr-2" }),
+                        "Define Custom Narrow Therapeutic Index (NTI) Drug"),
+                    React.createElement("button", { onClick: () => setShowCustomModal(false), className: "text-slate-400 hover:text-white" }, "\u2715")),
+                React.createElement("form", { onSubmit: handleCreateCustomDrug, className: "space-y-4 text-xs" },
+                    React.createElement("div", { className: "grid grid-cols-2 gap-3" },
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Drug Name"),
+                            React.createElement("input", { required: true, type: "text", value: customDrugForm.name, onChange: cf('name'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100" })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Drug Class / Category"),
+                            React.createElement("input", { required: true, type: "text", value: customDrugForm.subcategory, onChange: cf('subcategory'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100" }))),
+                    React.createElement("div", { className: "grid grid-cols-4 gap-3" },
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Dose Unit"),
+                            React.createElement("input", { type: "text", value: customDrugForm.unit, onChange: cf('unit'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100" })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Conc. Unit"),
+                            React.createElement("input", { type: "text", value: customDrugForm.concUnit, onChange: cf('concUnit'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100" })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Default Dose"),
+                            React.createElement("input", { type: "number", step: "any", value: customDrugForm.defaultDose, onChange: cf('defaultDose'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100" })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Default Interval (h)"),
+                            React.createElement("input", { type: "number", value: customDrugForm.defaultInterval, onChange: cf('defaultInterval'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100" }))),
+                    React.createElement("div", { className: "grid grid-cols-4 gap-3 bg-slate-900 p-3 rounded-xl border border-slate-800" },
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Min Trough"),
+                            React.createElement("input", { type: "number", step: "0.1", value: customDrugForm.targetTroughMin, onChange: cf('targetTroughMin'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-teal-300" })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Max Trough"),
+                            React.createElement("input", { type: "number", step: "0.1", value: customDrugForm.targetTroughMax, onChange: cf('targetTroughMax'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-teal-300" })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Toxic Trough"),
+                            React.createElement("input", { type: "number", step: "0.1", value: customDrugForm.toxicTrough, onChange: cf('toxicTrough'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-rose-300" })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Vd Coeff (L/kg)"),
+                            React.createElement("input", { type: "number", step: "0.05", value: customDrugForm.vdCoeff, onChange: cf('vdCoeff'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-cyan-300" }))),
+                    React.createElement("div", null,
+                        React.createElement("label", { className: "text-slate-400 block mb-1" }, "Organ Toxicity Profile (Comma-separated)"),
+                        React.createElement("input", { type: "text", value: customDrugForm.toxicityTypes, onChange: cf('toxicityTypes'), className: "w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100", placeholder: "e.g. Nephrotoxicity, Neurotoxicity, Hepatotoxicity" })),
+                    React.createElement("div", { className: "flex justify-end space-x-3 border-t border-slate-800 pt-3" },
+                        React.createElement("button", { type: "button", onClick: () => setShowCustomModal(false), className: "px-4 py-2 bg-slate-800 text-slate-300 rounded-xl" }, "Cancel"),
+                        React.createElement("button", { type: "submit", className: "px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-xl" }, "Save & Load Custom Drug")))))),
+        !showPrintReport ? (React.createElement("main", { className: "max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6" },
+            React.createElement("div", { className: "bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-sm space-y-3" },
+                React.createElement("div", { className: "flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3" },
+                    React.createElement("div", { className: "flex items-center space-x-2" },
+                        React.createElement(Filter, { className: "w-4 h-4 text-teal-400" }),
+                        React.createElement("span", { className: "text-xs font-semibold text-slate-300 uppercase tracking-wider" }, "Therapeutic Category Filter:")),
+                    React.createElement("div", { className: "flex flex-wrap gap-1.5 text-xs" },
+                        React.createElement("button", { onClick: () => setSelectedCategory('all'), className: `px-3 py-1 rounded-lg border transition ${selectedCategory === 'all' ? 'bg-teal-500/20 text-teal-300 border-teal-500/50' : 'bg-slate-800 text-slate-400 border-slate-700'}` },
+                            "All NTI Drugs (",
+                            Object.keys(drugDatabase).length,
+                            ")"),
+                        Object.entries(DRUG_CATEGORIES).map(([catKey, catName]) => (React.createElement("button", { key: catKey, onClick: () => setSelectedCategory(catKey), className: `px-3 py-1 rounded-lg border transition ${selectedCategory === catKey ? 'bg-teal-500/20 text-teal-300 border-teal-500/50' : 'bg-slate-800 text-slate-400 border-slate-700'}` }, catName))))),
+                React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2" }, filteredDrugKeys.map((key) => {
+                    const d = drugDatabase[key];
+                    const isSelected = selectedDrugKey === key;
+                    return (React.createElement("button", { key: key, onClick: () => {
+                            setSelectedDrugKey(key);
+                            setRegimen((prev) => ({
+                                ...prev,
+                                dose: d.defaultDose,
+                                interval: d.defaultInterval,
+                                infusionTime: d.defaultInfusionTime,
+                                cMeasured: 0,
+                                samplingTime: Math.max(0.5, d.defaultInterval - 1),
+                            }));
+                            setCustomDose(d.defaultDose);
+                            setCustomInterval(d.defaultInterval);
+                        }, className: `p-2.5 rounded-xl border text-left transition flex flex-col justify-between ${isSelected
+                            ? 'bg-gradient-to-b from-teal-950/80 to-slate-900 border-teal-500/80 shadow-md ring-1 ring-teal-500/50'
+                            : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-800'}` },
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-xs font-bold block text-slate-100 truncate" }, d.name),
+                            React.createElement("span", { className: "text-[10px] text-slate-400 block truncate" }, d.subcategory)),
+                        React.createElement("div", { className: "mt-2 text-[10px] text-teal-400 font-mono" },
+                            "Target: ",
+                            d.targetTroughMin,
+                            "-",
+                            d.targetTroughMax,
+                            " ",
+                            d.concUnit)));
+                }))),
+            React.createElement("div", { className: "bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm" },
+                React.createElement("div", { className: "flex items-center space-x-3" },
+                    React.createElement("div", { className: "p-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-teal-400" },
+                        React.createElement(Pill, { className: "w-6 h-6" })),
+                    React.createElement("div", null,
+                        React.createElement("div", { className: "flex items-center space-x-2" },
+                            React.createElement("h2", { className: "text-lg font-bold text-white" }, activeDrug.name),
+                            React.createElement("span", { className: "text-xs px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-teal-300 font-medium" }, activeDrug.subcategory)),
+                        React.createElement("p", { className: "text-xs text-slate-400 mt-0.5" }, activeDrug.guideline))),
+                React.createElement("div", { className: "flex flex-wrap items-center gap-1.5 text-xs" },
+                    React.createElement("span", { className: "text-slate-400 text-[11px] mr-1" }, "Monitored Toxicity Risks:"), (_a = activeDrug.toxicityTypes) === null || _a === void 0 ? void 0 :
+                    _a.map((tox, i) => (React.createElement("span", { key: i, className: "bg-rose-950/40 border border-rose-800/50 text-rose-300 px-2 py-0.5 rounded-md text-[11px]" }, tox))))),
+            React.createElement("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-6" },
+                React.createElement("div", { className: "lg:col-span-5 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4" },
+                    React.createElement("div", { className: "flex items-center justify-between border-b border-slate-800 pb-3" },
+                        React.createElement("div", { className: "flex items-center space-x-2" },
+                            React.createElement(User, { className: "w-4 h-4 text-teal-400" }),
+                            React.createElement("h3", { className: "text-sm font-semibold text-slate-200 uppercase tracking-wide" }, "Patient Profile & Dose Inputs")),
+                        React.createElement("span", { className: "text-[11px] bg-slate-800 text-teal-300 px-2 py-0.5 rounded font-mono" }, patient.id)),
+                    React.createElement("div", { className: "grid grid-cols-3 gap-2.5 text-xs" },
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Age (yr)"),
+                            React.createElement("input", { type: "number", value: patient.age, onChange: (e) => setPatient({ ...patient, age: Number(e.target.value) }), className: inputBase })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Gender"),
+                            React.createElement("select", { value: patient.gender, onChange: (e) => setPatient({ ...patient, gender: e.target.value }), className: inputBase },
+                                React.createElement("option", { value: "female" }, "Female"),
+                                React.createElement("option", { value: "male" }, "Male"))),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Weight (kg)"),
+                            React.createElement("input", { type: "number", value: patient.weight, onChange: (e) => setPatient({ ...patient, weight: Number(e.target.value) }), className: inputBase })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Height (cm)"),
+                            React.createElement("input", { type: "number", value: patient.height, onChange: (e) => setPatient({ ...patient, height: Number(e.target.value) }), className: inputBase })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "SCr (mg/dL)"),
+                            React.createElement("input", { type: "number", step: "0.1", value: patient.scr, onChange: (e) => setPatient({ ...patient, scr: Number(e.target.value) }), className: `${inputBase} text-teal-300 font-semibold` })),
+                        React.createElement("div", null,
+                            React.createElement("label", { className: "text-slate-400 block mb-1" }, "Albumin (g/dL)"),
+                            React.createElement("input", { type: "number", step: "0.1", value: patient.albumin, onChange: (e) => setPatient({ ...patient, albumin: Number(e.target.value) }), className: inputBase }))),
+                    React.createElement("div", { className: "bg-slate-950 rounded-xl p-3 border border-slate-800 grid grid-cols-3 gap-2 text-center text-xs" },
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-slate-400 block text-[10px]" }, "IBW"),
+                            React.createElement("span", { className: "font-semibold text-slate-200" },
+                                patientCalculations.ibw,
+                                " kg")),
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-slate-400 block text-[10px]" }, "ABW"),
+                            React.createElement("span", { className: "font-semibold text-slate-200" },
+                                patientCalculations.abw,
+                                " kg")),
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-slate-400 block text-[10px]" }, "CrCl (CG)"),
+                            React.createElement("span", { className: "font-bold text-teal-400" },
+                                patientCalculations.crCl,
+                                " mL/min"))),
+                    React.createElement("div", { className: "border-t border-slate-800 pt-3" },
+                        React.createElement("h4", { className: "text-xs font-semibold text-slate-300 mb-2 flex items-center" },
+                            React.createElement(Activity, { className: "w-3.5 h-3.5 mr-1.5 text-cyan-400" }),
+                            "Active Dosing Regimen & Observed Level"),
+                        React.createElement("div", { className: "grid grid-cols-3 gap-2.5 text-xs" },
+                            React.createElement("div", null,
+                                React.createElement("label", { className: "text-slate-400 block mb-1" },
+                                    "Dose (",
+                                    activeDrug.unit,
+                                    ")"),
+                                React.createElement("input", { type: "number", step: "any", value: regimen.dose, onChange: (e) => setRegimen({ ...regimen, dose: Number(e.target.value) }), className: `${inputBase} text-teal-300 font-bold` })),
+                            React.createElement("div", null,
+                                React.createElement("label", { className: "text-slate-400 block mb-1" }, "Interval (h)"),
+                                React.createElement("input", { type: "number", value: regimen.interval, onChange: (e) => setRegimen({ ...regimen, interval: Number(e.target.value) }), className: `${inputBase} text-slate-100` })),
+                            React.createElement("div", null,
+                                React.createElement("label", { className: "text-slate-400 block mb-1" },
+                                    "Measured Conc (",
+                                    activeDrug.concUnit,
+                                    ")"),
+                                React.createElement("input", { type: "number", step: "any", value: regimen.cMeasured, onChange: (e) => setRegimen({ ...regimen, cMeasured: Number(e.target.value) }), className: "w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-amber-300 font-bold focus:border-amber-500 focus:outline-none" }))),
+                        React.createElement("div", { className: "grid grid-cols-2 gap-2.5 text-xs mt-2.5" },
+                            React.createElement("div", null,
+                                React.createElement("label", { className: "text-slate-400 block mb-1" }, "Infusion Time (h)"),
+                                React.createElement("input", { type: "number", step: "0.25", min: "0", value: regimen.infusionTime, onChange: (e) => setRegimen({ ...regimen, infusionTime: Number(e.target.value) }), className: `${inputBase} text-slate-100` })),
+                            React.createElement("div", null,
+                                React.createElement("label", { className: "text-slate-400 block mb-1" }, "Sample Time (h after dose start)"),
+                                React.createElement("input", { type: "number", step: "0.5", min: "0", value: regimen.samplingTime, onChange: (e) => setRegimen({ ...regimen, samplingTime: Number(e.target.value) }), className: `${inputBase} text-slate-100` }))),
+                        selectedDrugKey === 'phenytoin' && patientCalculations.correctedPhenytoin !== regimen.cMeasured && (React.createElement("div", { className: "mt-2 p-2 bg-amber-950/30 border border-amber-800/40 rounded-lg text-[11px] text-amber-300" },
+                            "Winter-Tozer Corrected Phenytoin Level: ",
+                            React.createElement("strong", null,
+                                patientCalculations.correctedPhenytoin,
+                                " mg/L"),
+                            " (for Albumin ",
+                            patient.albumin,
+                            " g/dL).")))),
+                React.createElement("div", { className: "lg:col-span-7 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 flex flex-col justify-between" },
+                    React.createElement("div", null,
+                        React.createElement("div", { className: "flex items-center justify-between border-b border-slate-800 pb-3 mb-4" },
+                            React.createElement("div", { className: "flex items-center space-x-2" },
+                                React.createElement(Zap, { className: "w-4 h-4 text-cyan-400" }),
+                                React.createElement("h3", { className: "text-sm font-semibold text-slate-200 uppercase tracking-wide" }, "Dynamic PK Parameter Engine")),
+                            React.createElement("span", { className: "text-[11px] font-mono text-teal-400 bg-teal-950 px-2 py-0.5 rounded border border-teal-800" },
+                                "Model: ",
+                                activeDrug.pkModel)),
+                        React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4" },
+                            React.createElement("div", { className: "bg-slate-950 p-3 rounded-xl border border-slate-800" },
+                                React.createElement("span", { className: "text-[10px] text-slate-400 block uppercase" }, "Vd (Volume)"),
+                                React.createElement("span", { className: "text-lg font-bold text-slate-100" },
+                                    pkResults.vd,
+                                    " ",
+                                    React.createElement("span", { className: "text-xs font-normal text-slate-400" }, "L"))),
+                            React.createElement("div", { className: "bg-slate-950 p-3 rounded-xl border border-slate-800" },
+                                React.createElement("span", { className: "text-[10px] text-slate-400 block uppercase" }, "Clearance (CL)"),
+                                React.createElement("span", { className: "text-lg font-bold text-slate-100" },
+                                    pkResults.cl,
+                                    " ",
+                                    React.createElement("span", { className: "text-xs font-normal text-slate-400" }, "L/h"))),
+                            React.createElement("div", { className: "bg-slate-950 p-3 rounded-xl border border-slate-800" },
+                                React.createElement("span", { className: "text-[10px] text-slate-400 block uppercase" }, "Elimination Ke"),
+                                React.createElement("span", { className: "text-lg font-bold text-slate-100" },
+                                    pkResults.ke,
+                                    " ",
+                                    React.createElement("span", { className: "text-xs font-normal text-slate-400" }, "h\u207B\u00B9"))),
+                            React.createElement("div", { className: "bg-slate-950 p-3 rounded-xl border border-slate-800" },
+                                React.createElement("span", { className: "text-[10px] text-slate-400 block uppercase" }, "Half-Life (t\u00BD)"),
+                                React.createElement("span", { className: "text-lg font-bold text-teal-400" },
+                                    pkResults.tHalf,
+                                    " ",
+                                    React.createElement("span", { className: "text-xs font-normal text-slate-400" }, "h")))),
+                        React.createElement("div", { className: "bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3" },
+                            React.createElement("h4", { className: "text-xs font-semibold text-slate-300 uppercase tracking-wider" }, "Predicted Steady-State Concentrations"),
+                            React.createElement("div", { className: "grid grid-cols-3 gap-3 text-center" },
+                                React.createElement("div", { className: "bg-slate-900 p-2.5 rounded-lg border border-slate-800" },
+                                    React.createElement("span", { className: "text-[11px] text-slate-400 block" }, "Pred. Trough (Cmin)"),
+                                    React.createElement("span", { className: `text-base font-bold ${pkResults.ssTrough > activeDrug.toxicTrough ? 'text-rose-400' : 'text-emerald-400'}` },
+                                        pkResults.ssTrough,
+                                        " ",
+                                        React.createElement("span", { className: "text-xs font-normal text-slate-400" }, activeDrug.concUnit))),
+                                React.createElement("div", { className: "bg-slate-900 p-2.5 rounded-lg border border-slate-800" },
+                                    React.createElement("span", { className: "text-[11px] text-slate-400 block" }, "Pred. Peak (Cmax)"),
+                                    React.createElement("span", { className: "text-base font-bold text-slate-200" },
+                                        pkResults.ssPeak,
+                                        " ",
+                                        React.createElement("span", { className: "text-xs font-normal text-slate-400" }, activeDrug.concUnit))),
+                                React.createElement("div", { className: "bg-slate-900 p-2.5 rounded-lg border border-slate-800" },
+                                    React.createElement("span", { className: "text-[11px] text-slate-400 block" }, "24h AUC (AUC24)"),
+                                    React.createElement("span", { className: `text-base font-bold ${pkResults.auc24 > activeDrug.toxicAuc ? 'text-rose-400' : 'text-cyan-400'}` },
+                                        pkResults.auc24,
+                                        " ",
+                                        React.createElement("span", { className: "text-xs font-normal text-slate-400" },
+                                            activeDrug.concUnit,
+                                            "\u00B7h")))))),
+                    React.createElement("div", { className: `p-4 rounded-xl border flex items-start space-x-3 transition ${riskAnalysis.level === 'HIGH' ? 'bg-rose-950/50 border-rose-700/80 text-rose-200'
+                            : riskAnalysis.level === 'MODERATE' ? 'bg-amber-950/50 border-amber-700/80 text-amber-200'
+                                : riskAnalysis.level === 'SUBTHERAPEUTIC' ? 'bg-amber-950/40 border-amber-700/60 text-amber-200'
+                                    : 'bg-emerald-950/50 border-emerald-700/80 text-emerald-200'}` },
+                        riskAnalysis.level === 'HIGH' && React.createElement(ShieldAlert, { className: "w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" }),
+                        riskAnalysis.level === 'MODERATE' && React.createElement(AlertTriangle, { className: "w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" }),
+                        riskAnalysis.level === 'SUBTHERAPEUTIC' && React.createElement(AlertCircle, { className: "w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" }),
+                        riskAnalysis.level === 'LOW' && React.createElement(CheckCircle2, { className: "w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" }),
+                        React.createElement("div", null,
+                            React.createElement("h4", { className: "text-xs font-bold uppercase tracking-wider mb-1" }, riskAnalysis.title),
+                            React.createElement("ul", { className: "text-xs space-y-0.5 opacity-90" }, riskAnalysis.points.map((pt, i) => (React.createElement("li", { key: i },
+                                "\u2022 ",
+                                pt)))))))),
+            React.createElement("div", { className: "bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4" },
+                React.createElement("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3" },
+                    React.createElement("div", null,
+                        React.createElement("h3", { className: "text-sm font-semibold text-slate-200 uppercase tracking-wide flex items-center" },
+                            React.createElement(TrendingUp, { className: "w-4 h-4 mr-2 text-teal-400" }),
+                            "Visual Pharmacokinetic Profile & Target Window"),
+                        React.createElement("p", { className: "text-xs text-slate-400" },
+                            "Interactive steady-state simulation for ",
+                            activeDrug.name)),
+                    React.createElement("div", { className: "flex items-center space-x-4 text-xs" },
+                        React.createElement("div", { className: "flex items-center space-x-1.5" },
+                            React.createElement("div", { className: "w-3 h-0.5 bg-teal-400 rounded" }),
+                            React.createElement("span", { className: "text-slate-300" }, "Current Regimen")),
+                        React.createElement("div", { className: "flex items-center space-x-1.5" },
+                            React.createElement("div", { className: "w-3 h-0.5 bg-cyan-400 border border-dashed border-cyan-400" }),
+                            React.createElement("span", { className: "text-slate-300" }, "Simulated Regimen")),
+                        regimen.cMeasured > 0 && (React.createElement("div", { className: "flex items-center space-x-1.5" },
+                            React.createElement("div", { className: "w-2.5 h-2.5 rounded-full bg-amber-400" }),
+                            React.createElement("span", { className: "text-slate-300" }, "Measured Level"))))),
+                React.createElement("div", { className: "h-72 w-full pt-2" },
+                    React.createElement(ResponsiveContainer, { width: "100%", height: "100%" },
+                        React.createElement(LineChart, { data: chartData, margin: { top: 10, right: 30, left: 0, bottom: 0 } },
+                            React.createElement(CartesianGrid, { strokeDasharray: "3 3", stroke: "#1e293b" }),
+                            React.createElement(XAxis, { dataKey: "time", stroke: "#64748b", fontSize: 11, unit: "h" }),
+                            React.createElement(YAxis, { stroke: "#64748b", fontSize: 11, domain: [0, 'auto'], unit: ` ${activeDrug.concUnit}` }),
+                            React.createElement(Tooltip, { contentStyle: { backgroundColor: '#020617', borderColor: '#334155', borderRadius: '0.75rem', fontSize: '12px' } }),
+                            React.createElement(ReferenceArea, { y1: activeDrug.targetTroughMin, y2: activeDrug.targetTroughMax, fill: "#10b981", fillOpacity: 0.08, strokeOpacity: 0, ifOverflow: "extendDomain" }),
+                            activeDrug.toxicTrough && (React.createElement(ReferenceLine, { y: activeDrug.toxicTrough, stroke: "#f43f5e", strokeDasharray: "4 4", ifOverflow: "extendDomain", label: { value: `Tox Threshold (${activeDrug.toxicTrough})`, fill: '#f43f5e', fontSize: 10, position: 'insideTopRight' } })),
+                            React.createElement(Line, { type: "monotone", dataKey: "cCurrent", name: "Current Regimen", stroke: "#2dd4bf", strokeWidth: 2.5, dot: false }),
+                            React.createElement(Line, { type: "monotone", dataKey: "cSimulated", name: "Proposed Regimen", stroke: "#06b6d4", strokeDasharray: "5 5", strokeWidth: 2, dot: false }),
+                            regimen.cMeasured > 0 && (React.createElement(Line, { type: "monotone", dataKey: "cMeasured", name: "Measured Level", stroke: "#f59e0b", strokeWidth: 0, dot: { r: 6, fill: '#f59e0b', stroke: '#fff', strokeWidth: 1.5 } })))))),
+            React.createElement("div", { className: "bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4" },
+                React.createElement("div", { className: "flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-3" },
+                    React.createElement("div", null,
+                        React.createElement("h3", { className: "text-sm font-semibold text-slate-200 uppercase tracking-wide flex items-center" },
+                            React.createElement(Sliders, { className: "w-4 h-4 mr-2 text-teal-400" }),
+                            "Multi-Regimen Dose Adjustment Simulator"),
+                        React.createElement("p", { className: "text-xs text-slate-400" }, "Side-by-side comparison of alternative dosing schedules")),
+                    React.createElement("div", { className: "flex items-center space-x-3 text-xs bg-slate-950 p-2 rounded-xl border border-slate-800" },
+                        React.createElement("span", { className: "text-slate-400 font-medium" }, "Custom Option C:"),
+                        React.createElement("input", { type: "number", step: "any", value: customDose, onChange: (e) => setCustomDose(Number(e.target.value)), className: "w-20 bg-slate-800 border border-slate-700 rounded px-2 py-1 text-teal-300 font-semibold text-center" }),
+                        React.createElement("span", { className: "text-slate-400" },
+                            activeDrug.unit,
+                            " q"),
+                        React.createElement("input", { type: "number", value: customInterval, onChange: (e) => setCustomInterval(Number(e.target.value)), className: "w-14 bg-slate-800 border border-slate-700 rounded px-2 py-1 text-teal-300 font-semibold text-center" }),
+                        React.createElement("span", { className: "text-slate-400" }, "h"))),
+                React.createElement("div", { className: "overflow-x-auto" },
+                    React.createElement("table", { className: "w-full text-left text-xs border-collapse" },
+                        React.createElement("thead", null,
+                            React.createElement("tr", { className: "border-b border-slate-800 text-slate-400 bg-slate-950" },
+                                React.createElement("th", { className: "p-3" }, "Select"),
+                                React.createElement("th", { className: "p-3" }, "Regimen Option"),
+                                React.createElement("th", { className: "p-3" }, "Dose & Interval"),
+                                React.createElement("th", { className: "p-3" },
+                                    "Pred. Trough (",
+                                    activeDrug.concUnit,
+                                    ")"),
+                                React.createElement("th", { className: "p-3" },
+                                    "Pred. Peak (",
+                                    activeDrug.concUnit,
+                                    ")"),
+                                React.createElement("th", { className: "p-3" },
+                                    "24h AUC (",
+                                    activeDrug.concUnit,
+                                    "\u00B7h)"),
+                                React.createElement("th", { className: "p-3" }, "Therapeutic Status"))),
+                        React.createElement("tbody", { className: "divide-y divide-slate-800" }, simulatedRegimens.map((sim) => {
+                            const isSelected = selectedSimIndex === sim.id;
+                            return (React.createElement("tr", { key: sim.id, onClick: () => setSelectedSimIndex(sim.id), className: `cursor-pointer transition hover:bg-slate-800 ${isSelected ? 'bg-teal-950/30 font-semibold' : ''}` },
+                                React.createElement("td", { className: "p-3" },
+                                    React.createElement("input", { type: "radio", name: "selectedSim", checked: isSelected, onChange: () => setSelectedSimIndex(sim.id), className: "text-teal-500 focus:ring-teal-500 cursor-pointer" })),
+                                React.createElement("td", { className: "p-3 text-slate-200" }, sim.label),
+                                React.createElement("td", { className: "p-3 text-teal-300 font-mono" },
+                                    sim.dose,
+                                    " ",
+                                    activeDrug.unit,
+                                    " q",
+                                    sim.interval,
+                                    "h"),
+                                React.createElement("td", { className: "p-3 text-slate-200 font-semibold" }, sim.trough),
+                                React.createElement("td", { className: "p-3 text-slate-300" }, sim.peak),
+                                React.createElement("td", { className: "p-3 text-cyan-300 font-semibold" }, sim.auc24),
+                                React.createElement("td", { className: "p-3" },
+                                    React.createElement("span", { className: `inline-block px-2.5 py-1 rounded-full text-[11px] font-medium border ${sim.statusClass}` }, sim.status))));
+                        }))))),
+            React.createElement("p", { className: "text-[11px] text-slate-500 text-center" }, "Decision-support estimate only. Population PK parameters for several agents are generic placeholders \u2014 verify all outputs against institutional protocols and clinical judgement before acting."))) : (React.createElement("div", { className: "max-w-5xl mx-auto p-8 bg-white text-slate-900 rounded-2xl shadow-2xl my-6 border border-slate-200" },
+            React.createElement("div", { className: "flex justify-between items-start border-b border-slate-200 pb-4" },
+                React.createElement("div", null,
+                    React.createElement("h1", { className: "text-2xl font-bold text-slate-900" }, "Clinical TDM Consultation Report"),
+                    React.createElement("p", { className: "text-xs text-slate-500" }, "Narrow Therapeutic Index Precision Dosing Assessment")),
+                React.createElement("div", { className: "text-right" },
+                    React.createElement("span", { className: "text-xs font-mono bg-slate-100 px-2.5 py-1 rounded border border-slate-300" }, patient.id),
+                    React.createElement("p", { className: "text-xs text-slate-500 mt-1" }, new Date().toLocaleDateString()))),
+            React.createElement("div", { className: "grid grid-cols-2 gap-4 my-4 text-xs" },
+                React.createElement("div", { className: "bg-slate-50 p-3 rounded-lg border border-slate-200" },
+                    React.createElement("h4", { className: "font-semibold text-slate-700 border-b pb-1 mb-1" }, "Patient Details"),
+                    React.createElement("p", null,
+                        "Name: ",
+                        patient.name,
+                        " | Age: ",
+                        patient.age,
+                        " y/o (",
+                        patient.gender,
+                        ")"),
+                    React.createElement("p", null,
+                        "Weight: ",
+                        patient.weight,
+                        " kg | CrCl: ",
+                        patientCalculations.crCl,
+                        " mL/min")),
+                React.createElement("div", { className: "bg-slate-50 p-3 rounded-lg border border-slate-200" },
+                    React.createElement("h4", { className: "font-semibold text-slate-700 border-b pb-1 mb-1" }, "Agent & Target"),
+                    React.createElement("p", null,
+                        "Drug: ",
+                        React.createElement("strong", null, activeDrug.name),
+                        " (",
+                        activeDrug.subcategory,
+                        ")"),
+                    React.createElement("p", null,
+                        "Target Trough: ",
+                        activeDrug.targetTroughMin,
+                        "-",
+                        activeDrug.targetTroughMax,
+                        " ",
+                        activeDrug.concUnit))),
+            React.createElement("div", { className: "my-4 p-3 bg-slate-50 rounded-lg border text-xs" },
+                React.createElement("h4", { className: "font-bold text-slate-800 mb-1" }, "Clinical Recommendation Summary"),
+                React.createElement("p", null,
+                    "Selected Regimen: ",
+                    React.createElement("strong", null,
+                        simulatedRegimens[selectedSimIndex].dose,
+                        " ",
+                        activeDrug.unit,
+                        " q",
+                        simulatedRegimens[selectedSimIndex].interval,
+                        "h")),
+                React.createElement("p", null,
+                    "Predicted Exposure: Trough ",
+                    simulatedRegimens[selectedSimIndex].trough,
+                    " ",
+                    activeDrug.concUnit,
+                    " | AUC24 ",
+                    simulatedRegimens[selectedSimIndex].auc24),
+                React.createElement("p", null,
+                    "Status: ",
+                    simulatedRegimens[selectedSimIndex].status)),
+            React.createElement("div", { className: "mt-8 pt-4 border-t border-slate-200 flex justify-between text-xs text-slate-400" },
+                React.createElement("span", null, "TDM Navigator CDST Engine"),
+                React.createElement("span", null, "Clinician Signature: _______________________")),
+            React.createElement("div", { className: "mt-4 text-center" },
+                React.createElement("button", { onClick: () => window.print(), className: "bg-slate-900 text-white text-xs px-4 py-2 rounded-lg" }, "Print Report")))),
+        React.createElement("footer", { className: "border-t border-slate-800 text-slate-500 text-xs py-4 text-center mt-12" },
+            React.createElement("p", null, "TDM Navigator\u2122 NTI Platform \u2014 Multi-Drug Precision Decision Support System"))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(TDMNavigatorApp));
+
+} catch (e) {
+  document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#fda4af;white-space:pre-wrap">App failed to start: ' + String(e && e.message || e) + '</pre>';
+  throw e;
+}
+})();
+</script>
+</body>
+</html>
